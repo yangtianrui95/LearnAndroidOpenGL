@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LearnAndroidOpenGL</string>
+    <string name="primitive">图元绘制</string>
+    <string name="projections">投影变换</string>
+</resources>
