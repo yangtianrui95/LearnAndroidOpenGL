@@ -29,6 +29,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="onProjectionClick"
                 android:text="@string/projections" />
+
+            <Button
+                style="@style/MainMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onDrawCubeClick"
+                android:text="@string/draw_cube" />
         </LinearLayout>
 
 

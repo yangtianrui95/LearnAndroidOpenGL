@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".PrimitiveActivity" />
-        <activity android:name=".FrustumActivity"></activity>
+        <activity android:name=".GLViewActivity"/>
     </application>
 
 </manifest>

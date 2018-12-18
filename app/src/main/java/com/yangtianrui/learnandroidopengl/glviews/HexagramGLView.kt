@@ -5,7 +5,9 @@ import android.opengl.GLES30
 import android.opengl.Matrix
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import com.yangtianrui.learnandroidopengl.glutils.BufferUtils
+import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 import java.nio.Buffer
 import javax.microedition.khronos.opengles.GL10
 
@@ -19,6 +21,11 @@ import javax.microedition.khronos.opengles.GL10
 
 class HexagramGLView : AbsPrimitiveGLView {
 
+    class Factory : IViewFactory {
+        override fun create(context: Context): View {
+            return HexagramGLView(context)
+        }
+    }
 
     inner class Hexagram {
         private val angleCount = 6
@@ -90,7 +97,7 @@ class HexagramGLView : AbsPrimitiveGLView {
             // 计算最终矩阵
             val finalMatrix = createEmptyMatrix()
             // 摄像机矩阵*变换矩阵
-            Matrix.multiplyMM(finalMatrix, 0,  mCamera, 0, uMatrix, 0)
+            Matrix.multiplyMM(finalMatrix, 0, mCamera, 0, uMatrix, 0)
             // 投影矩阵*之前相乘的矩阵
             Matrix.multiplyMM(finalMatrix, 0, mProjection, 0, finalMatrix, 0)
 
@@ -133,7 +140,7 @@ class HexagramGLView : AbsPrimitiveGLView {
         // 设置正交投影比例
         //Matrix.orthoM(mProjection, 0, -1f, 1f, -aspect, aspect, 1f, 10f)
         // 设置透视投影
-        Matrix.frustumM(mProjection,0, -1f*.4f, 1f*.4f, -aspect*.4f, aspect*.4f,1f,50f)
+        Matrix.frustumM(mProjection, 0, -1f * .4f, 1f * .4f, -aspect * .4f, aspect * .4f, 1f, 50f)
 
         //https://blog.csdn.net/a7178077/article/details/38014373
         // 设置摄像机位置
