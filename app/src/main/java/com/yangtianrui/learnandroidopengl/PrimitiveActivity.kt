@@ -13,6 +13,7 @@ class PrimitiveActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_primitive)
+        title = getString(R.string.primitive)
     }
 
     fun onPointsClick(v: View) {
