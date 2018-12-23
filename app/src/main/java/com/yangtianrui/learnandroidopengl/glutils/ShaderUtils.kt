@@ -16,7 +16,7 @@ import java.io.ByteArrayOutputStream
 
 object ShaderUtils {
 
-    private var tag = "ShaderUtils"
+    private var tag = "Shader"
 
 
     //加载制定shader的方法
@@ -69,10 +69,10 @@ object ShaderUtils {
         if (program != 0) {
             //向程序中加入顶点着色器
             GLES30.glAttachShader(program, vertexShader)
-            checkGlError("glAttachShader")
+            checkGlError("attach vertex shader ")
             //向程序中加入片元着色器
             GLES30.glAttachShader(program, pixelShader)
-            checkGlError("glAttachShader")
+            checkGlError("attach fragment shader")
             //链接程序
             GLES30.glLinkProgram(program)
             //存放链接成功program数量的数组
@@ -93,11 +93,13 @@ object ShaderUtils {
 
     //检查每一步操作是否有错误的方法
     @SuppressLint("NewApi")
-    fun checkGlError(op: String) {
+    private fun checkGlError(op: String) {
         var error: Int
         do {
             error = GLES30.glGetError()
-            Log.e(tag, "$op: glError $error")
+            if (error != 0) {
+                Log.e(tag, "$op: glError $error")
+            }
         } while (error != GLES30.GL_NO_ERROR)
     }
 
