@@ -4,10 +4,12 @@ import android.content.Context
 import android.opengl.GLES30
 import android.opengl.Matrix
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.yangtianrui.learnandroidopengl.glutils.BufferUtils
 import com.yangtianrui.learnandroidopengl.utils.IViewFactory
+import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 /**
@@ -35,7 +37,17 @@ class CubeGLView : AbsPrimitiveGLView {
             1f, 1f, 0f
     )
 
+    private val colorArray = floatArrayOf(
+            1f, 1f, 1f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 1f, 0f
+    )
+
     private val vertexBuffer = BufferUtils.createBuffer(vertexArray)
+    private val colorBuffer = BufferUtils.createBuffer(colorArray)
     private val uMatrix = createIdentityMatrix()
     private val projection = createIdentityMatrix()
     private val lookupMatrix = createIdentityMatrix()
@@ -44,6 +56,11 @@ class CubeGLView : AbsPrimitiveGLView {
     private var mLastX: Float = 0f
     private var mLastY: Float = 0f
 
+    private var mMatrixLocation: Int = -1
+    private var mPositionLocation: Int = -1
+    private var mVColorLocation: Int = -1
+
+    private val mTouchScale: Float = .2f
 
     constructor(context: Context) : this(context, null)
 
@@ -51,7 +68,7 @@ class CubeGLView : AbsPrimitiveGLView {
 
     override fun getVertexShader(): String = "cube_vertex.glsl"
 
-    override fun getFragmentShader(): String = "pointer_frag.glsl"
+    override fun getFragmentShader(): String = "cube_frag.glsl"
 
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -71,40 +88,45 @@ class CubeGLView : AbsPrimitiveGLView {
     }
 
 
+    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        super.onSurfaceCreated(gl, config)
+        findLocationInShader()
+        GLES30.glEnable(GLES30.GL_DEPTH_TEST)
+    }
+
     override fun onDrawFrame(gl: GL10?) {
         super.onDrawFrame(gl)
-        val position = GLES30.glGetAttribLocation(mProgram, "position")
-        val matrix = GLES30.glGetUniformLocation(mProgram, "uMatrix")
+        GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT or GLES30.GL_COLOR_BUFFER_BIT)
 
         // 绘制前面
         Matrix.setIdentityM(uMatrix, 0)
         Matrix.translateM(uMatrix, 0, 0f, 0f, 1f)
-        drawSquare(position, matrix)
+        drawSquare()
 
         // 绘制后面
         Matrix.setIdentityM(uMatrix, 0)
         Matrix.translateM(uMatrix, 0, 0f, 0f, -1f)
         Matrix.rotateM(uMatrix, 0, 180f, 0f, 1f, 0f)
-        drawSquare(position, matrix)
+        drawSquare()
 
         // 绘制上面
         Matrix.setIdentityM(uMatrix, 0)
         Matrix.translateM(uMatrix, 0, 0f, 1f, 0f)
         Matrix.rotateM(uMatrix, 0, -90f, 1f, 0f, 0f)
-        drawSquare(position, matrix)
+        drawSquare()
 
         // 绘制底面
         Matrix.setIdentityM(uMatrix, 0)
         Matrix.translateM(uMatrix, 0, 0f, -1f, 0f)
         Matrix.rotateM(uMatrix, 0, 90f, 1f, 0f, 0f)
-        drawSquare(position, matrix)
+        drawSquare()
 
         // 绘制右侧面
         Matrix.setIdentityM(uMatrix, 0)
         Matrix.translateM(uMatrix, 0, 1f, 0f, 0f)
         Matrix.rotateM(uMatrix, 0, 90f, 1f, 0f, 0f)
         Matrix.rotateM(uMatrix, 0, 90f, 0f, 1f, 0f)
-        drawSquare(position, matrix)
+        drawSquare()
 
 
         // 绘制左侧面
@@ -112,11 +134,20 @@ class CubeGLView : AbsPrimitiveGLView {
         Matrix.translateM(uMatrix, 0, -1f, 0f, 0f)
         Matrix.rotateM(uMatrix, 0, 90f, 1f, 0f, 0f)
         Matrix.rotateM(uMatrix, 0, 90f, 0f, 1f, 0f)
-        drawSquare(position, matrix)
+        drawSquare()
 
     }
 
-    private fun drawSquare(positionLocation: Int, matrixLocation: Int) {
+    private fun findLocationInShader() {
+        mPositionLocation = GLES30.glGetAttribLocation(mProgram, "position")
+        mMatrixLocation = GLES30.glGetUniformLocation(mProgram, "uMatrix")
+        mVColorLocation = GLES30.glGetAttribLocation(mProgram, "vColor")
+
+        Log.d(tag, "findLocationInShader position = $mPositionLocation " +
+                ", uMatrix = $mMatrixLocation, vColor = $mVColorLocation")
+    }
+
+    private fun drawSquare() {
         val matrixResult = FloatArray(16)
 
         // 计算因手势产生的变换
@@ -126,9 +157,11 @@ class CubeGLView : AbsPrimitiveGLView {
         // 投影矩阵 * (摄像机矩阵 * 变换矩阵)
         Matrix.multiplyMM(matrixResult, 0, lookupMatrix, 0, matrixResult, 0)
         Matrix.multiplyMM(matrixResult, 0, projection, 0, matrixResult, 0)
-        GLES30.glVertexAttribPointer(positionLocation, 3, GLES30.GL_FLOAT, false, 3 * 4, vertexBuffer)
-        GLES30.glUniformMatrix4fv(matrixLocation, 1, false, matrixResult, 0)
-        GLES30.glEnableVertexAttribArray(positionLocation)
+        GLES30.glVertexAttribPointer(mPositionLocation, 3, GLES30.GL_FLOAT, false, 3 * 4, vertexBuffer)
+        GLES30.glUniformMatrix4fv(mMatrixLocation, 1, false, matrixResult, 0)
+        GLES30.glEnableVertexAttribArray(mPositionLocation)
+        GLES30.glVertexAttribPointer(mVColorLocation, 4, GLES30.GL_FLOAT, false, 4 * 4, colorBuffer)
+        GLES30.glEnableVertexAttribArray(mVColorLocation)
         GLES30.glDrawArrays(GLES30.GL_TRIANGLE_FAN, 0, vertexArray.size / 3)
     }
 
@@ -145,8 +178,8 @@ class CubeGLView : AbsPrimitiveGLView {
             MotionEvent.ACTION_MOVE -> {
                 val diffX = event.x - mLastX
                 val diffY = event.y - mLastY
-                Matrix.rotateM(rotateMatrix, 0, diffX, 0f, 1f, 0f)
-                Matrix.rotateM(rotateMatrix, 0, diffY, 1f, 0f, 0f)
+                Matrix.rotateM(rotateMatrix, 0, diffX * mTouchScale, 0f, 1f, 0f)
+                Matrix.rotateM(rotateMatrix, 0, diffY * mTouchScale, 1f, 0f, 0f)
                 mLastX = event.x
                 mLastY = event.y
                 requestRender()
