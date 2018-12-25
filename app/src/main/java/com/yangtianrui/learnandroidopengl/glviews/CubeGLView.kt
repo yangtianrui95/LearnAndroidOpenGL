@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.yangtianrui.learnandroidopengl.glutils.BufferUtils
+import com.yangtianrui.learnandroidopengl.glutils.MatrixUtils
 import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -49,10 +50,10 @@ class CubeGLView : AbsPrimitiveGLView {
 
     private val vertexBuffer = BufferUtils.createBuffer(vertexArray)
     private val colorBuffer = BufferUtils.createBuffer(colorArray)
-    private val uMatrix = createIdentityMatrix()
-    private val projection = createIdentityMatrix()
-    private val lookupMatrix = createIdentityMatrix()
-    private val rotateMatrix = createIdentityMatrix()
+    private val uMatrix = MatrixUtils.createIdentityMatrix()
+    private val projection = MatrixUtils.createIdentityMatrix()
+    private val lookupMatrix = MatrixUtils.createIdentityMatrix()
+    private val rotateMatrix = MatrixUtils.createIdentityMatrix()
 
     private var mLastX: Float = 0f
     private var mLastY: Float = 0f
@@ -168,11 +169,6 @@ class CubeGLView : AbsPrimitiveGLView {
         GLES30.glDrawArrays(GLES30.GL_TRIANGLE_FAN, 0, vertexArray.size / 3)
     }
 
-    private fun createIdentityMatrix(): FloatArray {
-        val matrix = FloatArray(16)
-        Matrix.setIdentityM(matrix, 0)
-        return matrix
-    }
 
 
     @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")

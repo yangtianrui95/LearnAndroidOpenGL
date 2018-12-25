@@ -4,11 +4,13 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLUtils
+import android.opengl.Matrix
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import com.yangtianrui.learnandroidopengl.R
 import com.yangtianrui.learnandroidopengl.glutils.BufferUtils
+import com.yangtianrui.learnandroidopengl.glutils.MatrixUtils
 import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -28,6 +30,8 @@ class TriangleTextureGLView : TrianglesGLView {
     }
 
     private var mTextureId: Int = -1
+    private val mProjection = MatrixUtils.createIdentityMatrix()
+    private val mCamera = MatrixUtils.createIdentityMatrix()
     private val mTextureBuffer = BufferUtils.createBuffer(floatArrayOf(
             .5f, 0f,
             0f, 1f,
@@ -44,11 +48,29 @@ class TriangleTextureGLView : TrianglesGLView {
         initTexture()
     }
 
+    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        super.onSurfaceChanged(gl, width, height)
+        initProjection(width, height)
+    }
+
+    private fun initProjection(width: Int, height: Int) {
+        val ratio: Float
+        if (width > height) {
+            ratio = width / height.toFloat()
+            Matrix.frustumM(mProjection, 0, -ratio, ratio, -1f, 1f, 1f, 10f)
+        } else {
+            ratio = height / width.toFloat()
+            Matrix.frustumM(mProjection, 0, -1f, 1f, -ratio, ratio, 1f, 10f)
+        }
+        Matrix.setLookAtM(mCamera, 0, 0f, 0f, 1.1f, 0f, 0f, 0f, 0f, 1f, 0f)
+    }
+
     private fun initTexture() {
         val textureId = IntArray(1)
         GLES30.glGenTextures(1, textureId, 0)
         mTextureId = textureId[0]
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureId)
+        // 设置纹理参数
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST.toFloat())
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR.toFloat())
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE.toFloat())
@@ -63,6 +85,10 @@ class TriangleTextureGLView : TrianglesGLView {
 
     override fun drawTriangle() {
         val textureCoord = GLES30.glGetAttribLocation(mProgram, "aTextureCoord")
+        val uMatrixLocation = GLES30.glGetUniformLocation(mProgram, "uMatrix")
+        val result = MatrixUtils.createIdentityMatrix()
+        Matrix.multiplyMM(result, 0, mProjection, 0, mCamera, 0)
+        GLES30.glUniformMatrix4fv(uMatrixLocation, 1, false, result, 0)
         GLES30.glVertexAttribPointer(textureCoord, 2, GLES30.GL_FLOAT, false, 2 * 4, mTextureBuffer)
         GLES30.glEnableVertexAttribArray(textureCoord)
         GLES30.glActiveTexture(mTextureId)
