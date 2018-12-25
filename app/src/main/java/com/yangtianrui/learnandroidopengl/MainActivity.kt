@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.TextView
 import com.yangtianrui.learnandroidopengl.glviews.CubeGLView
 import com.yangtianrui.learnandroidopengl.glviews.HexagramGLView
+import com.yangtianrui.learnandroidopengl.glviews.TriangleTextureGLView
 import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +30,10 @@ class MainActivity : AppCompatActivity() {
 
     fun onDrawCubeClick(view: View) {
         startGLActivity(view, CubeGLView.Factory())
+    }
+
+    fun onTextureClick(view: View) {
+        startGLActivity(view, TriangleTextureGLView.Factory())
     }
 
 

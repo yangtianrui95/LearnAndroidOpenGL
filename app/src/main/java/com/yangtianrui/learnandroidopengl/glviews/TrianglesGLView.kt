@@ -16,7 +16,7 @@ import javax.microedition.khronos.opengles.GL10
  * @date 2018/12/15
  */
 
-class TrianglesGLView : AbsPrimitiveGLView {
+open class TrianglesGLView : AbsPrimitiveGLView {
 
     private val vertexArray = floatArrayOf(
             -.5f, 0f, 0f,
@@ -35,8 +35,8 @@ class TrianglesGLView : AbsPrimitiveGLView {
     constructor(context: Context, attributeSet: AttributeSet?) : super(context, attributeSet)
 
 
-    override fun getVertexShader() = "line_vertex.glsl"
-    override fun getFragmentShader() = "pointer_frag.glsl"
+    override fun getVertexShader() = "texture_triangle_vertex.glsl"
+    override fun getFragmentShader() = "texture_triangle_frag.glsl"
 
 
     override fun onDrawFrame(gl: GL10?) {
@@ -44,7 +44,10 @@ class TrianglesGLView : AbsPrimitiveGLView {
         val location = GLES30.glGetAttribLocation(mProgram, "position")
         GLES30.glVertexAttribPointer(location, 3, GLES30.GL_FLOAT, false, 3 * 4, buffer)
         GLES30.glEnableVertexAttribArray(location)
+        drawTriangle()
+    }
+
+    protected open fun drawTriangle() {
         GLES30.glDrawElements(GLES30.GL_TRIANGLES, vertexIndexArray.size, GLES30.GL_UNSIGNED_BYTE, indexBuffer)
-        GLES30.glFlush()
     }
 }

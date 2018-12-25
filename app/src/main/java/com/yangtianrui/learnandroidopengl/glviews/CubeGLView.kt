@@ -19,6 +19,7 @@ import javax.microedition.khronos.opengles.GL10
  * @author yangtianrui
  * @date 2018/12/18
  */
+// todo(yangtianrui) 手势存在问题
 class CubeGLView : AbsPrimitiveGLView {
 
     class Factory : IViewFactory {
@@ -84,6 +85,7 @@ class CubeGLView : AbsPrimitiveGLView {
         // 产生透视投影矩阵
         Matrix.frustumM(projection, 0, -ratio, ratio, -1f, 1f, 1f, 10f)
         // 产生摄像机矩阵
+        //https://blog.csdn.net/jamesshaoya/article/details/54342241
         Matrix.setLookAtM(lookupMatrix, 0, 0f, 0f, 4f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
     }
 
@@ -155,6 +157,7 @@ class CubeGLView : AbsPrimitiveGLView {
 
         // 注意矩阵乘法的顺序，顺序错误无法正确变换!
         // 投影矩阵 * (摄像机矩阵 * 变换矩阵)
+        //https://glumes.com/post/opengl/opengl-tutorial-projection-matrix/
         Matrix.multiplyMM(matrixResult, 0, lookupMatrix, 0, matrixResult, 0)
         Matrix.multiplyMM(matrixResult, 0, projection, 0, matrixResult, 0)
         GLES30.glVertexAttribPointer(mPositionLocation, 3, GLES30.GL_FLOAT, false, 3 * 4, vertexBuffer)

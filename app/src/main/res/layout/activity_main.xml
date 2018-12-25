@@ -36,6 +36,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="onDrawCubeClick"
                 android:text="@string/draw_cube" />
+
+            <Button
+                style="@style/MainMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onTextureClick"
+                android:text="@string/testure" />
         </LinearLayout>
 
 
