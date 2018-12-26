@@ -29,7 +29,8 @@ class TriangleTextureGLView : TrianglesGLView {
         }
     }
 
-    private var mTextureId: Int = -1
+    private var mWallTextureId: Int = -1
+    private var mFaceTextureId: Int = -1
     private val mProjection = MatrixUtils.createIdentityMatrix()
     private val mCamera = MatrixUtils.createIdentityMatrix()
     // 为每个顶点绑定纹理坐标
@@ -46,7 +47,8 @@ class TriangleTextureGLView : TrianglesGLView {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
-        initTexture()
+        mWallTextureId = initTexture(R.drawable.wall, 0)
+        mFaceTextureId = initTexture(R.drawable.face, 1)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -66,36 +68,44 @@ class TriangleTextureGLView : TrianglesGLView {
         Matrix.setLookAtM(mCamera, 0, 0f, 0f, 1.1f, 0f, 0f, 0f, 0f, 1f, 0f)
     }
 
-    private fun initTexture() {
+    private fun initTexture(drawableResource: Int, textureIndex: Int): Int {
         val textureId = IntArray(1)
         // 生成纹理
         GLES30.glGenTextures(1, textureId, 0)
-        mTextureId = textureId[0]
         // 在绑定纹理之前，先激活纹理
-        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0 + textureIndex)
         // 绑定纹理
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureId)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE0 + textureIndex)
         // 设置纹理环绕，过滤方式
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST.toFloat())
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR.toFloat())
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE.toFloat())
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE.toFloat())
         // 将Bitmap加载进显存
-        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.wall)
+        val bitmap = BitmapFactory.decodeResource(resources, drawableResource)
         GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
         bitmap.recycle()
-        Log.d(tag, "texture id = $mTextureId")
+        Log.d(tag, "texture id = ${textureId[0]}")
+        return textureId[0]
     }
 
 
     override fun drawTriangle() {
         val textureCoord = GLES30.glGetAttribLocation(mProgram, "aTextureCoord")
         val uMatrixLocation = GLES30.glGetUniformLocation(mProgram, "uMatrix")
+        val wallTextureLocation = GLES30.glGetUniformLocation(mProgram, "sTexture")
+        val faceTextureLocation = GLES30.glGetUniformLocation(mProgram, "sTexture2")
+
         val result = MatrixUtils.createIdentityMatrix()
         Matrix.multiplyMM(result, 0, mProjection, 0, mCamera, 0)
         GLES30.glUniformMatrix4fv(uMatrixLocation, 1, false, result, 0)
         GLES30.glVertexAttribPointer(textureCoord, 2, GLES30.GL_FLOAT, false, 2 * 4, mTextureBuffer)
         GLES30.glEnableVertexAttribArray(textureCoord)
+
+        // 绑定多个纹理的话，需要将纹理索引传到Shader
+        GLES30.glUniform1i(wallTextureLocation, 0)
+        GLES30.glUniform1i(faceTextureLocation, 1)
+
         super.drawTriangle()
     }
 
