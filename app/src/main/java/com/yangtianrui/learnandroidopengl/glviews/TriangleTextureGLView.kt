@@ -32,6 +32,7 @@ class TriangleTextureGLView : TrianglesGLView {
     private var mTextureId: Int = -1
     private val mProjection = MatrixUtils.createIdentityMatrix()
     private val mCamera = MatrixUtils.createIdentityMatrix()
+    // 为每个顶点绑定纹理坐标
     private val mTextureBuffer = BufferUtils.createBuffer(floatArrayOf(
             .5f, 0f,
             0f, 1f,
@@ -67,10 +68,14 @@ class TriangleTextureGLView : TrianglesGLView {
 
     private fun initTexture() {
         val textureId = IntArray(1)
+        // 生成纹理
         GLES30.glGenTextures(1, textureId, 0)
         mTextureId = textureId[0]
+        // 在绑定纹理之前，先激活纹理
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        // 绑定纹理
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureId)
-        // 设置纹理参数
+        // 设置纹理环绕，过滤方式
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST.toFloat())
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR.toFloat())
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE.toFloat())
@@ -91,8 +96,6 @@ class TriangleTextureGLView : TrianglesGLView {
         GLES30.glUniformMatrix4fv(uMatrixLocation, 1, false, result, 0)
         GLES30.glVertexAttribPointer(textureCoord, 2, GLES30.GL_FLOAT, false, 2 * 4, mTextureBuffer)
         GLES30.glEnableVertexAttribArray(textureCoord)
-        GLES30.glActiveTexture(mTextureId)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureId)
         super.drawTriangle()
     }
 
