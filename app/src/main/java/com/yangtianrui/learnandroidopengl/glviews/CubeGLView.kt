@@ -179,15 +179,18 @@ class CubeGLView : AbsPrimitiveGLView {
                 val diffY = event.y - mLastY
                 Matrix.rotateM(rotateMatrix, 0, diffX * mTouchScale, 0f, 1f, 0f)
                 Matrix.rotateM(rotateMatrix, 0, diffY * mTouchScale, 1f, 0f, 0f)
-                mLastX = event.x
-                mLastY = event.y
                 requestRender()
             }
-            else -> {
-                mLastX = event!!.x
-                mLastY = event!!.y
-            }
         }
+        mLastX = event!!.x
+        mLastY = event!!.y
         return true
+    }
+
+    // 切换视角测试
+    fun setCameraMatrix(progress: Int){
+        val factor = progress * .1f
+        Matrix.setLookAtM(lookupMatrix, 0, factor, 0f, 4f , 0f, 0f, 0f, 0f, 1.0f, 0.0f)
+        requestRender()
     }
 }

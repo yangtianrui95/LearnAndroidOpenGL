@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.yangtianrui.learnandroidopengl.glviews.CubeGLView
 import com.yangtianrui.learnandroidopengl.glviews.HexagramGLView
 import com.yangtianrui.learnandroidopengl.glviews.TriangleTextureGLView
+import com.yangtianrui.learnandroidopengl.utils.ISeekBarListener
 import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 
 class MainActivity : AppCompatActivity() {
@@ -24,23 +25,30 @@ class MainActivity : AppCompatActivity() {
 
 
     fun onProjectionClick(view: View) {
-        startGLActivity(view, HexagramGLView.Factory())
+        startGLActivity(view, HexagramGLView.Factory(), null)
     }
 
 
     fun onDrawCubeClick(view: View) {
-        startGLActivity(view, CubeGLView.Factory())
+        startGLActivity(view, CubeGLView.Factory(), object : ISeekBarListener {
+            override fun onProgressChanged(view: View?, progress: Int) {
+                if (view is CubeGLView) {
+                    view.setCameraMatrix(progress)
+                }
+            }
+        })
     }
 
     fun onTextureClick(view: View) {
-        startGLActivity(view, TriangleTextureGLView.Factory())
+        startGLActivity(view, TriangleTextureGLView.Factory(), null)
     }
 
 
-    private fun startGLActivity(view: View, factory: IViewFactory) {
+    private fun startGLActivity(view: View, factory: IViewFactory, seekbarListener: ISeekBarListener?) {
         val intent = Intent(this, GLViewActivity::class.java)
         intent.putExtra(GLViewActivity.extra_factory, factory)
         intent.putExtra(GLViewActivity.extra_title, (view as? TextView)?.text)
+        intent.putExtra(GLViewActivity.extra_seek, seekbarListener)
         startActivity(intent)
     }
 }
