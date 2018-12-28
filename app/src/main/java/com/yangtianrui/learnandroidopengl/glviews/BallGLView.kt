@@ -20,7 +20,7 @@ import javax.microedition.khronos.opengles.GL10
  */
 class BallGLView : AbsPrimitiveGLView {
 
-    class BallGLViewFactory : IViewFactory {
+    class Factory : IViewFactory {
         override fun create(context: Context): View {
             return BallGLView(context)
         }
@@ -123,7 +123,7 @@ class BallGLView : AbsPrimitiveGLView {
             ratio = height.toFloat() / width
             Matrix.frustumM(mProjection, 0, -1f, 1f, -ratio, ratio, 1f, 10f)
         }
-        Matrix.setLookAtM(mCameraMatrix, 0, 0f, 0f, 2f, 0f, 0f, 0f, 0f, 1f, 0f)
+        Matrix.setLookAtM(mCameraMatrix, 0, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f)
     }
 
     override fun getVertexShader(): String = "ball_vertex.glsl"

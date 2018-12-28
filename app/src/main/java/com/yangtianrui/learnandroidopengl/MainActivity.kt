@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun onDrawBallClick(view: View){
-        startGLActivity(view, BallGLView.BallGLViewFactory())
+        startGLActivity(view, BallGLView.Factory())
     }
 
     private fun startGLActivity(view: View, factory: IViewFactory, seekbarListener: ISeekBarListener? = null) {
