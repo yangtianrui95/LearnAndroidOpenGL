@@ -35,8 +35,9 @@ open class TrianglesGLView : AbsPrimitiveGLView {
     constructor(context: Context, attributeSet: AttributeSet?) : super(context, attributeSet)
 
 
-    override fun getVertexShader() = "texture_triangle_vertex.glsl"
-    override fun getFragmentShader() = "texture_triangle_frag.glsl"
+    override fun getVertexShader() = "line_vertex.glsl"
+
+    override fun getFragmentShader() = "pointer_frag.glsl"
 
 
     override fun onDrawFrame(gl: GL10?) {

@@ -110,4 +110,9 @@ class TriangleTextureGLView : TrianglesGLView {
     }
 
 
+    override fun getVertexShader() = "texture_triangle_vertex.glsl"
+
+    override fun getFragmentShader() = "texture_triangle_frag.glsl"
+
+
 }
