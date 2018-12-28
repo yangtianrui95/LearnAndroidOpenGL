@@ -4,4 +4,5 @@
     <string name="projections">投影变换</string>
     <string name="draw_cube">正方体绘制</string>
     <string name="testure">纹理贴图</string>
+    <string name="draw_ball">球体绘制</string>
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
+import com.yangtianrui.learnandroidopengl.glviews.BallGLView
 import com.yangtianrui.learnandroidopengl.glviews.CubeGLView
 import com.yangtianrui.learnandroidopengl.glviews.HexagramGLView
 import com.yangtianrui.learnandroidopengl.glviews.TriangleTextureGLView
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun onProjectionClick(view: View) {
-        startGLActivity(view, HexagramGLView.Factory(), null)
+        startGLActivity(view, HexagramGLView.Factory())
     }
 
 
@@ -40,11 +41,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onTextureClick(view: View) {
-        startGLActivity(view, TriangleTextureGLView.Factory(), null)
+        startGLActivity(view, TriangleTextureGLView.Factory())
     }
 
 
-    private fun startGLActivity(view: View, factory: IViewFactory, seekbarListener: ISeekBarListener?) {
+    fun onDrawBallClick(view: View){
+        startGLActivity(view, BallGLView.BallGLViewFactory())
+    }
+
+    private fun startGLActivity(view: View, factory: IViewFactory, seekbarListener: ISeekBarListener? = null) {
         val intent = Intent(this, GLViewActivity::class.java)
         intent.putExtra(GLViewActivity.extra_factory, factory)
         intent.putExtra(GLViewActivity.extra_title, (view as? TextView)?.text)
