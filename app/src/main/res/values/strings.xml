@@ -6,4 +6,5 @@
     <string name="testure">纹理贴图</string>
     <string name="draw_ball">球体绘制</string>
     <string name="illumination">环境光照</string>
+    <string name="diffuse" >散射光照</string>
 </resources>

@@ -57,6 +57,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="onIlluminationClick"
                 android:text="@string/illumination" />
+
+            <Button
+                style="@style/MainMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onDiffuseClick"
+                android:text="@string/diffuse" />
         </LinearLayout>
 
 

@@ -63,6 +63,10 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(GLViewActivity.extra_seek, seekbarListener)
         startActivity(intent)
     }
+
+    fun onDiffuseClick(view: View){
+        startGLActivity(view, DiffuseBallGLView.Factory())
+    }
 }
 
 

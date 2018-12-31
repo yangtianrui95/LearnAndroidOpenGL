@@ -3,21 +3,22 @@ package com.yangtianrui.learnandroidopengl.glviews
 import android.content.Context
 import android.opengl.GLES30
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 
 /**
  * Copyright (C) 2018 The Learn Android OpenGL Project.
  *
- * 环境光效果
+ * 散射光效果
  * @author yangtianrui
  * @date 2018/12/31
  */
-class AmbientBallGLView : BallGLView {
+class DiffuseBallGLView : BallGLView {
 
     class Factory : IViewFactory {
         override fun create(context: Context): View {
-            return AmbientBallGLView(context)
+            return DiffuseBallGLView(context)
         }
     }
 
@@ -25,23 +26,13 @@ class AmbientBallGLView : BallGLView {
 
     constructor(context: Context, attributeSet: AttributeSet?) : super(context, attributeSet)
 
-    private val minimProgress = .1f
-    private var mProgress: Float = minimProgress
+    override fun getVertexShader() = "diffuse_ball_vertex.glsl"
 
-    override fun getVertexShader() = "ball_vertex.glsl"
-
-    override fun getFragmentShader() = "ambient_ball_frag.glsl"
-
+    override fun getFragmentShader() = "diffuse_ball_frag.glsl"
 
     override fun onDrawCalls() {
-        val uAmbient = GLES30.glGetUniformLocation(mProgram, "uAmbient")
-        GLES30.glUniform4f(uAmbient, mProgress, mProgress, mProgress, mProgress)
+        val uLocation = GLES30.glGetUniformLocation(mProgram, "uLocation")
+        GLES30.glUniform3f(uLocation, -4f, 0f, 0f)
         super.onDrawCalls()
-    }
-
-    fun setAmbient(progress: Int) {
-        val factor = progress * .01f
-        mProgress = if (factor < minimProgress) minimProgress else factor
-        requestRender()
     }
 }

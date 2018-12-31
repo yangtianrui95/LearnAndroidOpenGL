@@ -1,5 +1,6 @@
 package com.yangtianrui.learnandroidopengl
 
+import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -17,6 +18,7 @@ class GLViewActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     private var mSeekBarListener: ISeekBarListener? = null
+    private var mGLView: GLSurfaceView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +45,8 @@ class GLViewActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     private fun setGLViewFromIntent() {
         val viewFactory: IViewFactory = intent.getSerializableExtra(extra_factory) as IViewFactory
-        fl_content.addView(viewFactory.create(this))
+        mGLView = viewFactory.create(this) as GLSurfaceView?
+        fl_content.addView(mGLView)
     }
 
     private fun setTitleFromIntent() {
@@ -61,6 +64,16 @@ class GLViewActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mGLView?.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mGLView?.onPause()
     }
 
 }
