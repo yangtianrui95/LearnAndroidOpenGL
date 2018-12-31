@@ -3,7 +3,6 @@ package com.yangtianrui.learnandroidopengl.glviews
 import android.content.Context
 import android.opengl.GLES30
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 
@@ -32,7 +31,9 @@ class DiffuseBallGLView : BallGLView {
 
     override fun onDrawCalls() {
         val uLocation = GLES30.glGetUniformLocation(mProgram, "uLocation")
+        val uTransformMatrix = GLES30.glGetUniformLocation(mProgram, "uTransformMatrix")
         GLES30.glUniform3f(uLocation, -4f, 0f, 0f)
+        GLES30.glUniformMatrix4fv(uTransformMatrix, 1, false, mUMatrix, 0)
         super.onDrawCalls()
     }
 }

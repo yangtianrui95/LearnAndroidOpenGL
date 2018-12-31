@@ -29,9 +29,9 @@ open class BallGLView : AbsPrimitiveGLView {
     }
 
     private val mRadius: Float = .8f
-    private val mUMatrix: FloatArray = MatrixUtils.createIdentityMatrix()
     private val mCameraMatrix: FloatArray = MatrixUtils.createIdentityMatrix()
     private val mProjection: FloatArray = MatrixUtils.createIdentityMatrix()
+    protected val mUMatrix: FloatArray = MatrixUtils.createIdentityMatrix()
 
 
     private var mVertexCount: Int = 0

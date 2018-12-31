@@ -4,6 +4,7 @@ in vec3 position;
 out vec3 vPosition;
 out vec4 vDiffuse;
 uniform mat4 uMatrix;
+uniform mat4 uTransformMatrix;
 uniform vec3 uLocation;
 
 // 散射光照计算
@@ -15,16 +16,15 @@ void pointLight(
         ) {
 
     vec3 normalTarget = position + normal;
-    vec3 newNormal = (uMatrix * vec4(normalTarget, 1)).xyz - (uMatrix * vec4(position, 1)).xyz;
-    newNormal = normalize(normal);
+    vec3 newNormal = (uTransformMatrix * vec4(normalTarget, 1)).xyz - (uTransformMatrix * vec4(position, 1)).xyz;
+    newNormal = normalize(newNormal);
     // 表面点到光源位置的距离
-    vec3 vp = normalize(lightLocation - (uMatrix * vec4(position, 1)).xyz);
+    vec3 vp = normalize(lightLocation - (uTransformMatrix * vec4(position, 1)).xyz);
     vp = normalize(vp);
 
     // 计算点乘结果
     float result = max(0.0, dot(newNormal, vp));
     diffuse = result * lightDiffuse;
-   // diffuse = vec4(newNormal, 1.0);
 }
 
 void main() {
