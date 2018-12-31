@@ -50,6 +50,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="onDrawBallClick"
                 android:text="@string/draw_ball" />
+
+            <Button
+                style="@style/MainMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onIlluminationClick"
+                android:text="@string/illumination" />
         </LinearLayout>
 
 

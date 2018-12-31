@@ -20,7 +20,7 @@ import javax.microedition.khronos.opengles.GL10
  * @author yangtianrui
  * @date 2018/12/26
  */
-class BallGLView : AbsPrimitiveGLView {
+open class BallGLView : AbsPrimitiveGLView {
 
     class Factory : IViewFactory {
         override fun create(context: Context): View {
@@ -159,6 +159,10 @@ class BallGLView : AbsPrimitiveGLView {
         GLES30.glUniformMatrix4fv(uMatrtixL, 1, false, result, 0)
         GLES30.glUniform1f(uRadiusL, mRadius)
         GLES30.glEnableVertexAttribArray(positionL)
+        onDrawCalls()
+    }
+
+    protected open fun onDrawCalls() {
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, mVertexCount)
     }
 

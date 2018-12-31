@@ -4,6 +4,7 @@ precision mediump float;
 uniform float uRadius;
 in vec3 vPosition;
 out vec4 fragcolor;
+uniform vec4 uAmbient;
 
 void main(){
 
@@ -19,4 +20,6 @@ void main(){
     } else {
         fragcolor = vec4(1.0,1,1,1.0);
     }
+    // 计算环境光照
+    fragcolor = fragcolor * uAmbient;
 }

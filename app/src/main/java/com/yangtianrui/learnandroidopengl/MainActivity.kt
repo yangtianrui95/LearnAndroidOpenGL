@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
-import com.yangtianrui.learnandroidopengl.glviews.BallGLView
-import com.yangtianrui.learnandroidopengl.glviews.CubeGLView
-import com.yangtianrui.learnandroidopengl.glviews.HexagramGLView
-import com.yangtianrui.learnandroidopengl.glviews.TriangleTextureGLView
+import com.yangtianrui.learnandroidopengl.glviews.*
 import com.yangtianrui.learnandroidopengl.utils.ISeekBarListener
 import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 
@@ -47,6 +44,16 @@ class MainActivity : AppCompatActivity() {
 
     fun onDrawBallClick(view: View){
         startGLActivity(view, BallGLView.Factory())
+    }
+
+    fun onIlluminationClick(view: View){
+        startGLActivity(view, AmbientBallGLView.Factory(), object :ISeekBarListener{
+            override fun onProgressChanged(view: View?, progress: Int) {
+                if (view is AmbientBallGLView){
+                    view.setAmbient(progress)
+                }
+            }
+        })
     }
 
     private fun startGLActivity(view: View, factory: IViewFactory, seekbarListener: ISeekBarListener? = null) {
