@@ -7,4 +7,5 @@
     <string name="draw_ball">球体绘制</string>
     <string name="illumination">环境光照</string>
     <string name="diffuse" >散射光照</string>
+    <string name="specular">镜面光照</string>
 </resources>

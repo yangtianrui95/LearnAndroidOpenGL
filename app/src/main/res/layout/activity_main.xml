@@ -64,6 +64,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="onDiffuseClick"
                 android:text="@string/diffuse" />
+
+            <Button
+                style="@style/MainMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onSpecularClick"
+                android:text="@string/specular" />
         </LinearLayout>
 
 

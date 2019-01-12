@@ -32,6 +32,7 @@ open class BallGLView : AbsPrimitiveGLView {
     private val mCameraMatrix: FloatArray = MatrixUtils.createIdentityMatrix()
     private val mProjection: FloatArray = MatrixUtils.createIdentityMatrix()
     protected val mUMatrix: FloatArray = MatrixUtils.createIdentityMatrix()
+    protected val mCameraLocation: FloatArray = floatArrayOf(0f, 0f, 40f)
 
 
     private var mVertexCount: Int = 0
@@ -128,7 +129,7 @@ open class BallGLView : AbsPrimitiveGLView {
             ratio = height.toFloat() / width
             Matrix.frustumM(mProjection, 0, -1f, 1f, -ratio, ratio, 39f, 50f)
         }
-        Matrix.setLookAtM(mCameraMatrix, 0, 0f, 0f, 40f, 0f, 0f, 0f, 0f, 1f, 0f)
+        Matrix.setLookAtM(mCameraMatrix, 0, mCameraLocation[0], mCameraLocation[1], mCameraLocation[2], 0f, 0f, 0f, 0f, 1f, 0f)
     }
 
     override fun getVertexShader(): String = "ball_vertex.glsl"

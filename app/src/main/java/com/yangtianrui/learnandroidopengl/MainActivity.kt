@@ -75,6 +75,10 @@ class MainActivity : AppCompatActivity() {
 
         })
     }
+
+    fun onSpecularClick(view: View) {
+        startGLActivity(view, SpecularGLView.SpecularFactory())
+    }
 }
 
 
