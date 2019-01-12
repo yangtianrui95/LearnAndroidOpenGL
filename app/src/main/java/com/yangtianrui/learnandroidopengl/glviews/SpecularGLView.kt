@@ -16,7 +16,7 @@ import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 class SpecularGLView : BallGLView {
 
 
-    class SpecularFactory:IViewFactory{
+    class SpecularFactory : IViewFactory {
         override fun create(context: Context): View {
             return SpecularGLView(context)
         }
@@ -24,8 +24,10 @@ class SpecularGLView : BallGLView {
 
 
     private val minimumLightX = -4f
+    private val minimumShininess = 1f
+    private val maximumShininess = 50f
     private var mLightX: Float = minimumLightX
-    private var mShininess : Float = 10f
+    private var mShininess: Float = minimumShininess
 
     constructor(context: Context) : this(context, null)
 
@@ -49,6 +51,13 @@ class SpecularGLView : BallGLView {
 
         Log.d(tag, "uCamera location : $uCamera, uLocation $uLocation, uTransformMatrix $uTransformMatrix")
         super.onDrawCalls()
+    }
+
+    fun setShininess(progress: Int, max: Int?) {
+        val factor = progress.toFloat() / max!!
+        mShininess = maximumShininess / minimumShininess * factor + minimumShininess
+        Log.d(tag, "shininess: $mShininess")
+        requestRender()
     }
 
 }

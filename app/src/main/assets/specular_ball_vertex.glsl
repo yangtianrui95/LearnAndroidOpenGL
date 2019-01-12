@@ -27,9 +27,10 @@ void pointLight(
 
     // 计算半角向量
     vec3 halfv = normalize(vp + eye);
-
+    float dotHalf = dot(newNormal, halfv);
+    float shininessPower = pow(dotHalf, uShininess);
     // 计算点乘结果,光照粗糙度
-    float result = max(0.0, dot(newNormal, halfv));
+    float result = max(0.0, shininessPower);
     specular = result * lightSpecular;
 }
 

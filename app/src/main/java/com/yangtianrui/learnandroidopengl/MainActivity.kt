@@ -77,7 +77,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onSpecularClick(view: View) {
-        startGLActivity(view, SpecularGLView.SpecularFactory())
+        startGLActivity(view, SpecularGLView.SpecularFactory(), object : ISeekBarListener {
+            override fun onProgressChanged(seekBar: SeekBar?, view: View?, progress: Int) {
+                if (view is SpecularGLView){
+                    view.setShininess(progress, seekBar?.max)
+                }
+            }
+        })
     }
 }
 
