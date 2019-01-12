@@ -57,7 +57,7 @@ class GLViewActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        mSeekBarListener?.onProgressChanged(fl_content.getChildAt(0), progress)
+        mSeekBarListener?.onProgressChanged(seekBar, fl_content.getChildAt(0), progress)
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {

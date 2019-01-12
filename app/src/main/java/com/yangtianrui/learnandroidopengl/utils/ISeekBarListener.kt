@@ -1,6 +1,7 @@
 package com.yangtianrui.learnandroidopengl.utils
 
 import android.view.View
+import android.widget.SeekBar
 import java.io.Serializable
 
 /**
@@ -11,6 +12,6 @@ import java.io.Serializable
  */
 interface ISeekBarListener : Serializable {
 
-    fun onProgressChanged(view: View?, progress: Int)
+    fun onProgressChanged(seekBar: SeekBar?, view: View?, progress: Int)
 
 }

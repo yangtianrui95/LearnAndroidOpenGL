@@ -3,6 +3,7 @@ package com.yangtianrui.learnandroidopengl.glviews
 import android.content.Context
 import android.opengl.GLES30
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import com.yangtianrui.learnandroidopengl.utils.IViewFactory
 
@@ -21,6 +22,9 @@ class DiffuseBallGLView : BallGLView {
         }
     }
 
+    private val minimumLightX = -4f
+    private var mLightX: Float = minimumLightX
+
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attributeSet: AttributeSet?) : super(context, attributeSet)
@@ -32,8 +36,14 @@ class DiffuseBallGLView : BallGLView {
     override fun onDrawCalls() {
         val uLocation = GLES30.glGetUniformLocation(mProgram, "uLocation")
         val uTransformMatrix = GLES30.glGetUniformLocation(mProgram, "uTransformMatrix")
-        GLES30.glUniform3f(uLocation, -4f, 0f, 0f)
+        GLES30.glUniform3f(uLocation, mLightX, 0f, 3f)
         GLES30.glUniformMatrix4fv(uTransformMatrix, 1, false, mUMatrix, 0)
         super.onDrawCalls()
+    }
+
+    fun setLightLocation(max: Int?, progress: Int) {
+        mLightX = 2 * Math.abs(minimumLightX) * ((progress.toFloat() / max!!) - .5f)
+        Log.d(tag, "light location = $mLightX")
+        requestRender()
     }
 }

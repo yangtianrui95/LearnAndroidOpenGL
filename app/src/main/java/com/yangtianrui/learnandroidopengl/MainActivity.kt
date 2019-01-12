@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.SeekBar
 import android.widget.TextView
 import com.yangtianrui.learnandroidopengl.glviews.*
 import com.yangtianrui.learnandroidopengl.utils.ISeekBarListener
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onDrawCubeClick(view: View) {
         startGLActivity(view, CubeGLView.Factory(), object : ISeekBarListener {
-            override fun onProgressChanged(view: View?, progress: Int) {
+            override fun onProgressChanged(seekBar: SeekBar?, view: View?, progress: Int) {
                 if (view is CubeGLView) {
                     view.setCameraMatrix(progress)
                 }
@@ -42,14 +43,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun onDrawBallClick(view: View){
+    fun onDrawBallClick(view: View) {
         startGLActivity(view, BallGLView.Factory())
     }
 
-    fun onIlluminationClick(view: View){
-        startGLActivity(view, AmbientBallGLView.Factory(), object :ISeekBarListener{
-            override fun onProgressChanged(view: View?, progress: Int) {
-                if (view is AmbientBallGLView){
+    fun onIlluminationClick(view: View) {
+        startGLActivity(view, AmbientBallGLView.Factory(), object : ISeekBarListener {
+            override fun onProgressChanged(seekBar: SeekBar?, view: View?, progress: Int) {
+                if (view is AmbientBallGLView) {
                     view.setAmbient(progress)
                 }
             }
@@ -64,8 +65,15 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun onDiffuseClick(view: View){
-        startGLActivity(view, DiffuseBallGLView.Factory())
+    fun onDiffuseClick(view: View) {
+        startGLActivity(view, DiffuseBallGLView.Factory(), object : ISeekBarListener {
+            override fun onProgressChanged(seekBar: SeekBar?, view: View?, progress: Int) {
+                if (view is DiffuseBallGLView) {
+                    view.setLightLocation(seekBar?.max, progress)
+                }
+            }
+
+        })
     }
 }
 
